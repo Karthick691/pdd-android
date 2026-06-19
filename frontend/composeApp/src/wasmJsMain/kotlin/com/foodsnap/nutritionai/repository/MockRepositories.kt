@@ -25,6 +25,17 @@ class MockFoodLogRepository : FoodLogRepository {
         logs.add(entry)
     }
 
+    override suspend fun deleteFoodLog(userId: String, logId: String) {
+        logs.removeAll { it.id == logId }
+    }
+
+    override suspend fun updateFoodLog(userId: String, entry: FoodLogEntry) {
+        val index = logs.indexOfFirst { it.id == entry.id }
+        if (index != -1) {
+            logs[index] = entry
+        }
+    }
+
     override suspend fun clearFoodLogs(userId: String) {
         logs.clear()
     }
@@ -58,6 +69,26 @@ class MockChatRepository : ChatRepository {
     }
 
     override suspend fun clearChatHistory(userId: String) {
+        logs.clear()
+    }
+}
+
+class MockExerciseRepository : ExerciseRepository {
+    private val logs = mutableListOf<ExerciseLogEntry>()
+
+    override suspend fun getExerciseLogs(userId: String): List<ExerciseLogEntry> {
+        return logs
+    }
+
+    override suspend fun addExerciseLog(userId: String, entry: ExerciseLogEntry) {
+        logs.add(entry)
+    }
+
+    override suspend fun deleteExerciseLog(userId: String, logId: String) {
+        logs.removeAll { it.id == logId }
+    }
+
+    override suspend fun clearExerciseLogs(userId: String) {
         logs.clear()
     }
 }
